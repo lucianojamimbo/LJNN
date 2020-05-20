@@ -16,10 +16,6 @@ def init(sizes):
     for i in range(1, len(sizes)):
         delta.append(np.zeros((sizes[i], 1)))
     return weights, biases, delta
-
-
-
-
 def feedforwards(w, b, inp):
     a = inp
     activations = []
@@ -32,15 +28,10 @@ def feedforwards(w, b, inp):
         activations.append(a)
         presig.append(bs)
     return activations, presig
-
-
-
-
 def geterror(activations, desiredoutput, presig, delta, weights):#calculate delta
     delta[-1] = np.multiply((np.subtract(activations[-1], desiredoutput)), sigmoidderivative(presig[-1]))
     i = 1 #start at one because error in output is already done
     while i < len(delta):
-        print(delta[i-1])
         delta[-i-1] = np.multiply(np.transpose(np.matmul(weights[-i].T, delta[-i])), sigmoidderivative(presig[-i-1]))
         i+=1
     return delta
