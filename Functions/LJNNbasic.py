@@ -23,8 +23,8 @@ def feedforwards(w, b, inp):
     activations.append(inp)
     for iw, ib in zip(w, b):
         x = np.dot(iw, a)
-        bs = np.add(x, [item for sublist in ib for item in sublist])
-        a = sigmoid(bs)
+        bs = np.add(x, ib)
+        a = sigmoid(bs)       
         activations.append(a)
         presig.append(bs)
     return activations, presig
@@ -32,6 +32,6 @@ def geterror(activations, desiredoutput, presig, delta, weights):#calculate delt
     delta[-1] = np.multiply((np.subtract(activations[-1], desiredoutput)), sigmoidderivative(presig[-1]))
     i = 1 #start at one because error in output is already done
     while i < len(delta):
-        delta[-i-1] = np.multiply(np.transpose(np.matmul(weights[-i].T, delta[-i])), sigmoidderivative(presig[-i-1]))
+        delta[-i-1] = np.multiply(np.matmul(weights[-i].T, delta[-i]), sigmoidderivative(presig[-i-1]))
         i+=1
     return delta
