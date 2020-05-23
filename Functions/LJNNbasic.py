@@ -7,13 +7,13 @@ def sigmoidderivative(x):#only ever pass presig into this!
 def init(sizes):
     weights = []
     for i in range(1, len(sizes)):
-        weights.append(np.zeros((sizes[i], sizes[i-1])))
+        weights.append(np.random.randn(sizes[i], sizes[i-1]))
     biases = []
     for i in range(1, len(sizes)):
-        biases.append(np.zeros((sizes[i], 1)))
+        biases.append(np.random.randn(sizes[i], 1))
     delta = []
     for i in range(1, len(sizes)):
-        delta.append(np.zeros((sizes[i], 1)))
+        delta.append(np.random.randn(sizes[i], 1))
     return weights, biases, delta
 def feedforwards(w, b, inp):
     a = inp
