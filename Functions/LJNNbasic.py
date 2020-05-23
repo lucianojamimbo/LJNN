@@ -7,7 +7,6 @@ def sigmoidderivative(x):#only ever pass presig into this!
 def init(sizes):
     weights = []
     for i in range(1, len(sizes)):
-        print(sizes[i-1], sizes[i])
         weights.append(np.zeros((sizes[i], sizes[i-1])))
     biases = []
     for i in range(1, len(sizes)):
@@ -23,15 +22,19 @@ def feedforwards(w, b, inp):
     activations.append(inp)
     for iw, ib in zip(w, b):
         x = np.dot(iw, a)
-        bs = np.add(x, ib)
+        bs = np.add(x, ib.T[0])
         a = sigmoid(bs)       
         activations.append(a)
         presig.append(bs)
     return activations, presig
-def geterror(activations, desiredoutput, presig, delta, weights):#calculate delta
-    delta[-1] = np.multiply((np.subtract(activations[-1], desiredoutput)), sigmoidderivative(presig[-1]))
+def geterror(activations, desiredoutput, presig, delta, weights, biases):#calculate delta
+    x = np.subtract(activations[-1], desiredoutput)
+    delta[-1] = np.multiply(x, sigmoidderivative(presig[-1]))
+    delta[-1] = np.reshape(delta[-1], np.shape(biases[-1]))
     i = 1 #start at one because error in output is already done
     while i < len(delta):
-        delta[-i-1] = np.multiply(np.matmul(weights[-i].T, delta[-i]), sigmoidderivative(presig[-i-1]))
+        delta[-i-1] = np.multiply(np.matmul(weights[-i].T, delta[-i]), np.reshape(sigmoidderivative(presig[-i-1]), np.shape(biases[-i-1])))
         i+=1
     return delta
+def cost(do, a):
+    return np.sum(np.power(np.subtract(do, a), 2))
