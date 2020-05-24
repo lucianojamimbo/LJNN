@@ -33,6 +33,7 @@ def SimpleGradientDescent(a, delta, weights, biases, eta, epoch_amt, data, testd
     plt.plot(graph)
     plt.show()
     return weights, biases #return the new weights and biases
+
 def StochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_size, epoch_amt, data, testdata):
     print("training with stochastic gradient descent")
     nwshape = copy.deepcopy(a[1:])

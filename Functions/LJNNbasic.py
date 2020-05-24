@@ -49,4 +49,4 @@ def test(testdata, weights, biases):
         i+=1
     print("test complete")
     print("correctly classified {0} images out of 10000".format(correct))
-    return correct    
+    return correct
