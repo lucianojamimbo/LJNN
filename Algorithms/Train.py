@@ -66,6 +66,7 @@ def StochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_size, ep
             weights = np.subtract(weights, np.multiply(nabla_w, eta))
             biases = np.subtract(biases, np.multiply(eta, nabla_b))
             iters +=1
+        print("epoch {0} complete".format(epochs))
         graph.append(ljnnb.test(testdata, weights, biases))
         epochs +=1
     end = time.time()
