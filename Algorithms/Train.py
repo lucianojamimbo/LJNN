@@ -11,8 +11,7 @@ def SimpleGradientDescent(a, delta, weights, biases, eta, epoch_amt, data, testd
     while epochs < epoch_amt:
         iters = 0
         while iters < 60000:
-            do = np.zeros(10) #set desired output to all zeros
-            do[data[iters][1][0]] = 1 #set desired output based on training data label
+            do = data[iters][0]
             a, ps = ljnnb.feedforwards(weights, biases, data[iters][0]) #feedforwards
             delta = ljnnb.geterror(a, do, ps, delta, weights, biases) #feedbackwards
             biases = np.subtract(biases, np.multiply(eta, delta)) #get nabla_b then set biases accordingly
@@ -22,13 +21,13 @@ def SimpleGradientDescent(a, delta, weights, biases, eta, epoch_amt, data, testd
             for i in range(0, len(nabla_w)): #reshape nabla_w
                 nabla_w[i] = np.reshape(nabla_w[i], np.shape(weights[i]))    
             weights = np.subtract(weights, np.multiply(nabla_w, eta)) #change weights according to nabla_w
+            costvar = ljnnb.cost(do, a[-1])
+            graph.append(costvar)
             iters+=1 #and repeat
         print("epoch {0} complete".format(epochs))
-        graph.append(ljnnb.test(testdata, weights, biases))
         epochs+=1
     end = time.time()
     print("training time:", end-start)
-    #creating this graph is helpful
     import matplotlib.pyplot as plt
     plt.plot(graph)
     plt.show()
@@ -40,7 +39,7 @@ def StochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_size, ep
     start = time.time()
     graph = []
     epochs = 0
-    nabla_b_zero = np.zeros(np.shape(ljnnb.geterror(a, np.zeros(10), ps, delta, weights, biases)))
+    nabla_b_zero = np.zeros(np.shape(ljnnb.geterror(a, np.zeros(784), ps, delta, weights, biases)))
     nabla_w_zero = np.zeros(np.shape(nwshape))
     while epochs < epoch_amt:
         iters = 0
@@ -50,8 +49,7 @@ def StochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_size, ep
             nabla_b = nabla_b_zero
             nabla_w = nabla_w_zero
             while batchiter < batch_size:
-                do = np.zeros(10)
-                do[data[dataiter][1]] = 1
+                do = data[dataiter][0]
                 a, ps = ljnnb.feedforwards(weights, biases, data[dataiter][0])
                 delta = ljnnb.geterror(a, do, ps, delta, weights, biases)
                 current_nabla_b = delta
@@ -64,11 +62,12 @@ def StochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_size, ep
                 nabla_b = np.add(nabla_b, np.divide(current_nabla_b, batch_size))
                 batchiter +=1
                 dataiter +=1
+            costvar = ljnnb.cost(do, a[-1])
+            graph.append(costvar)
             weights = np.subtract(weights, np.multiply(nabla_w, eta))
             biases = np.subtract(biases, np.multiply(eta, nabla_b))
             iters +=1
         print("epoch {0} complete".format(epochs))
-        graph.append(ljnnb.test(testdata, weights, biases))
         epochs +=1
     end = time.time()
     print("training time:", end-start)
