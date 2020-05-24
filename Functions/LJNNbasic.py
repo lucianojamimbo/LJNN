@@ -1,4 +1,4 @@
-#collection of basic functions for neural networks.
+#collection of basic functions for feedforwards neural networks.
 import numpy as np
 def sigmoid(z):
     return 1/(np.add(1,np.exp(np.negative(z))))
@@ -38,3 +38,15 @@ def geterror(activations, desiredoutput, presig, delta, weights, biases):#calcul
     return delta
 def cost(do, a):
     return np.sum(np.power(np.subtract(do, a), 2))
+def test(testdata, weights, biases):
+    print("testing")
+    correct = 0
+    i = 0
+    while i < 10000:
+        a, ps = feedforwards(weights, biases, testdata[i][0])
+        if testdata[i][1][0] == np.argmax(a[-1]):
+            correct+=1
+        i+=1
+    print("test complete")
+    print("correctly classified {0} images out of 10000".format(correct))
+    return correct    
