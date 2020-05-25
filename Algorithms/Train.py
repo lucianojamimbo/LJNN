@@ -9,6 +9,7 @@ def EncoderSimpleGradientDescent(a, delta, weights, biases, eta, epoch_amt, data
     start = time.time()
     epochs = 0
     while epochs < epoch_amt:
+        np.random.shuffle(data)
         iters = 0
         while iters < 60000:
             do = data[iters][0]
@@ -42,6 +43,7 @@ def EncoderStochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_s
     nabla_b_zero = np.zeros(np.shape(ljnnb.geterror(a, np.zeros(784), ps, delta, weights, biases)))
     nabla_w_zero = np.zeros(np.shape(nwshape))
     while epochs < epoch_amt:
+        np.random.shuffle(data)
         iters = 0
         dataiter = 0
         while iters < 60000/batch_size:
@@ -83,6 +85,7 @@ def SimpleGradientDescent(a, delta, weights, biases, eta, epoch_amt, data, testd
     start = time.time()
     epochs = 0
     while epochs < epoch_amt:
+        np.random.shuffle(data)
         iters = 0
         while iters < 60000:
             do = np.zeros(10) #set desired output to all zeros
@@ -117,6 +120,7 @@ def StochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_size, ep
     nabla_b_zero = np.zeros(np.shape(ljnnb.geterror(a, np.zeros(10), ps, delta, weights, biases)))
     nabla_w_zero = np.zeros(np.shape(nwshape))
     while epochs < epoch_amt:
+        np.random.shuffle(data)
         iters = 0
         dataiter = 0
         while iters < 60000/batch_size:
