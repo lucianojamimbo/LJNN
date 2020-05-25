@@ -66,8 +66,8 @@ def EncoderStochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_s
                 dataiter +=1
             costvar = ljnnb.cost(do, a[-1])
             graph.append(costvar)
-            nabla_w = np.add(nabla_w, np.divide(current_nabla_w, batch_size))
-            nabla_b = np.add(nabla_b, np.divide(current_nabla_b, batch_size))
+            weights = np.subtract(weights, np.multiply(np.divide(eta, batch_size), nabla_w))
+            biases = np.subtract(biases, np.multiply(np.divide(eta, batch_size), nabla_b))
             iters +=1
         print("epoch {0} complete".format(epochs))
         epochs +=1
