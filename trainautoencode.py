@@ -12,7 +12,7 @@ np.random.seed(234)
 sizes = [784,64,10,64,784] #set the shape of the network
 weights, biases, delta = ljnnb.init(sizes) #initialise the weights, biases, and delta randomly but with the correct shape
 a, ps = ljnnb.feedforwards(weights, biases, data[0][0])
-weights, biases = train.EncoderStochasticGradientDescent(a, ps, delta, weights, biases, 1, 10, 20, data, None)
+weights, biases = train.EncoderStochasticGradientDescent(a, ps, delta, weights, biases, 1, 10, 50, data, None)
 #run a test after training
 print("testlabel", data[0][1][0])
 a, ps = ljnnb.feedforwards(weights, biases, data[0][0])
