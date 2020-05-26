@@ -14,7 +14,7 @@ def EncoderSimpleGradientDescent(a, delta, weights, biases, eta, epoch_amt, data
         while iters < 60000:
             do = data[iters][0]
             a, ps = ljnnb.feedforwards(weights, biases, data[iters][0]) #feedforwards
-            delta = ljnnb.geterror(a, do, ps, delta, weights, biases) #feedbackwards
+            delta = geterror(a, do, ps, delta, weights, biases) #feedbackwards
             biases = np.subtract(biases, np.multiply(eta, delta)) #get nabla_b then set biases accordingly
             nabla_w = nwshape #create nabla_w
             for i in range(0, len(a)-1): #find the values for nabla_w
@@ -40,7 +40,7 @@ def EncoderStochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_s
     start = time.time()
     graph = []
     epochs = 0
-    nabla_b_zero = np.zeros(np.shape(ljnnb.geterror(a, np.zeros(784), ps, delta, weights, biases)))
+    nabla_b_zero = np.zeros(np.shape(geterror(a, np.zeros(784), ps, delta, weights, biases)))
     nabla_w_zero = np.zeros(np.shape(nwshape))
     while epochs < epoch_amt:
         np.random.shuffle(data)
@@ -53,7 +53,7 @@ def EncoderStochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_s
             while batchiter < batch_size:
                 do = data[dataiter][0]
                 a, ps = ljnnb.feedforwards(weights, biases, data[dataiter][0])
-                delta = ljnnb.geterror(a, do, ps, delta, weights, biases)
+                delta = geterror(a, do, ps, delta, weights, biases)
                 current_nabla_b = delta
                 current_nabla_w = nwshape #make it a correct shape
                 for i in range(0, len(a)-1): #find the vales
@@ -91,7 +91,7 @@ def SimpleGradientDescent(a, delta, weights, biases, eta, epoch_amt, data, testd
             do = np.zeros(10) #set desired output to all zeros
             do[data[iters][1][0]] = 1 #set desired output based on training data label
             a, ps = ljnnb.feedforwards(weights, biases, data[iters][0]) #feedforwards
-            delta = ljnnb.geterror(a, do, ps, delta, weights, biases) #feedbackwards
+            delta = geterror(a, do, ps, delta, weights, biases) #feedbackwards
             biases = np.subtract(biases, np.multiply(eta, delta)) #get nabla_b then set biases accordingly
             nabla_w = nwshape #create nabla_w
             for i in range(0, len(a)-1): #find the values for nabla_w
@@ -117,7 +117,7 @@ def StochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_size, ep
     start = time.time()
     graph = []
     epochs = 0
-    nabla_b_zero = np.zeros(np.shape(ljnnb.geterror(a, np.zeros(10), ps, delta, weights, biases)))
+    nabla_b_zero = np.zeros(np.shape(geterror(a, np.zeros(10), ps, delta, weights, biases)))
     nabla_w_zero = np.zeros(np.shape(nwshape))
     while epochs < epoch_amt:
         np.random.shuffle(data)
@@ -131,7 +131,7 @@ def StochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_size, ep
                 do = np.zeros(10)
                 do[data[dataiter][1]] = 1
                 a, ps = ljnnb.feedforwards(weights, biases, data[dataiter][0])
-                delta = ljnnb.geterror(a, do, ps, delta, weights, biases)
+                delta = geterror(a, do, ps, delta, weights, biases)
                 current_nabla_b = delta
                 current_nabla_w = nwshape #make it a correct shape
                 for i in range(0, len(a)-1): #find the vales
@@ -154,3 +154,13 @@ def StochasticGradientDescent(a, ps, delta, weights, biases, eta, batch_size, ep
     plt.plot(graph)
     plt.show()
     return weights, biases
+
+def geterror(activations, desiredoutput, presig, delta, weights, biases):#calculate delta
+    x = np.subtract(activations[-1], desiredoutput)
+    delta[-1] = np.multiply(x, ljnnb.sigmoidderivative(presig[-1]))
+    delta[-1] = np.reshape(delta[-1], np.shape(biases[-1]))
+    i = 1 #start at one because error in output is already done
+    while i < len(delta):
+        delta[-i-1] = np.multiply(np.matmul(weights[-i].T, delta[-i]), np.reshape(ljnnb.sigmoidderivative(presig[-i-1]), np.shape(biases[-i-1])))
+        i+=1
+    return delta
